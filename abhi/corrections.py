@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy.random as random
 
 class model():
-    def __init__(self, mean=0.0, std=0.1, tau=0.05, x_init=0.0, dt=0.001, time_horizon=1.0):
+    def __init__(self, mean=0.0, std=0.1, tau=0.05, x_init=0.0, dt=0.01, time_horizon=10.0):
         #distribution parameters
         self.MU = mean
         self.SIGMA = std
@@ -22,7 +22,7 @@ class model():
             return self.theta * (self.MU - x)
 
     def sigma(self, _y, _t):
-            return self.sigma * np.sqrt(2/self.tau)
+            return self.SIGMA * np.sqrt(2/self.tau)
 
     def euler_maruyama(self):
         x = np.zeros(self.num_steps)
@@ -61,7 +61,7 @@ class model():
             t = self.time_vec[i]
             integral_term[i+1] = integral_term[i]+np.exp(self.theta*t)*self.noise[i]
 
-        for i in range(self.num_steps):
+        for i in range(self.num_steps - 1):
             t = self.time_vec[i]
             initial_term   = self.x_init * np.exp(self.theta * t)
             drift_term     = self.MU * (1-np.exp(self.theta * t))
@@ -70,5 +70,11 @@ class model():
             x[i+1] = initial_term + drift_term + diffusion_term
         
         return x
+
+langevin = model()
+
+em_sim = langevin.euler_maruyama()
+mil_sim = langevin.milstein()
+exact   = langevin.exact_solution()
 
 print()
