@@ -1,79 +1,74 @@
-import jax.numpy as jnp
+import numpy as np
 import matplotlib.pyplot as plt
-import jax.random as random
+import numpy.random as random
 
 class model():
-    def __init__(self, mean=10.0, std=1.0, x_init=5.0, dt=0.001, time_horizon=1.0, tau=0.05):
+    def __init__(self, mean=0.0, std=0.1, tau=0.05, x_init=0.0, dt=0.001, time_horizon=1.0):
         #distribution parameters
-        self.mean = mean
-        self.std = std
+        self.MU = mean
+        self.SIGMA = std
         
         #time parameters
         self.x_init = x_init
         self.dt = dt
         self.tau = tau
+        self.theta = 1/self.tau
         self.t_end = time_horizon
         self.num_steps = int(self.t_end/self.dt)
-        self.time_vec = jnp.linspace(0, self.t_end, self.num_steps)
-        self.noise = random.normal(random.PRNGKey(10402024), shape=(self.num_steps,))
+        self.time_vec = np.linspace(0, self.t_end, self.num_steps)
+        self.noise = random.normal(loc=0.0, scale=np.sqrt(self.dt), size=self.num_steps)
 
-    def euler_maruyama_langevin(self):
-        x = jnp.zeros(self.num_steps)
-        x = x.at[0].set(self.x_init)
+    def mu(self, x, _t):
+            return self.theta * (self.MU - x)
 
-        # Compute outside to avoid repeated computation as stated in ref[2]
-        sigma_func = self.std * jnp.sqrt(2. / self.tau)
+    def sigma(self, _y, _t):
+            return self.sigma * np.sqrt(2/self.tau)
 
+    def euler_maruyama(self):
+        x = np.zeros(self.num_steps)
+        x[0] = self.x_init
+        
         for i in range(self.num_steps - 1):
-            Z = self.noise[i]
-            mu_func = -(x[i] - self.mean) / self.tau
-            x = x.at[i+1].set(
-                              x[i] \
-                              + mu_func * self.dt \
-                              + sigma_func * Z
-                              )
-        return x
-
-    def milstein_langevin(self):
-        x = jnp.zeros(self.num_steps)
-        x = x.at[0].set(self.x_init)
-
-        sigma_func = self.std * jnp.sqrt(2. / self.tau)
-
-        for i in range(self.num_steps - 1):
-            Z = self.noise[i]
-
-            mu_func = -(x[i] - self.mean) / self.tau
-            milstein_term = (1/2) * (sigma_func) * (0) * Z
-
-            x = x.at[i+1].set(x[i] \
-                              + mu_func * self.dt \
-                              + sigma_func * Z  \
-                              + milstein_term
-                              )
-
-        return x
-    
-    def exact_solution(self):
-        theta = 1/self.tau
-        b = self.std*jnp.sqrt(2/self.tau)
-        x = jnp.zeros(self.num_steps)
-        x = x.at[0].set(self.x_init)
-
-        for i in range(1, len(self.time_vec)):
             t = self.time_vec[i]
-            
-            initial = self.x_init*jnp.exp(-theta*t)
-            drift   = self.mean*(1-jnp.exp(theta*t))
-            noise   = ((b)/(jnp.sqrt(2*theta)))*self.noise[i]
-            
-            x = x.at[i].set(initial + drift + noise)
+            x[i+1] = x[i] \
+                     + self.mu(x[i], t) * self.dt \
+                     + self.sigma(x[i], t) * self.noise[i]
+        
+        return x, self.time_vec
+
+    def milstein(self):
+        x = np.zeros(self.num_steps)
+        x[0] = self.x_init
+
+        for i in range(self.num_steps - 1):
+            t = self.time_vec[i]
+            milstein = ((self.sigma(x[i], t)**2)/2) * x[i] * (self.noise[i]**2 - self.dt)
+
+            x[i+1] = x[i]\
+                     + self.mu(t, x[i]) * self.dt\
+                     + self.sigma(t, x[i]) * self.noise[i] \
+                     + milstein
+        
+        return x, self.time_vec
+
+    def exact_solution(self):
+        x = np.zeros(self.num_steps)
+        x[0] = self.x_init
+
+        # simple sum integral approximation
+        integral_term = np.zeros(self.num_steps)
+        for i in range(self.num_steps - 1):
+            t = self.time_vec[i]
+            integral_term[i+1] = integral_term[i]+np.exp(self.theta*t)*self.noise[i]
+
+        for i in range(self.num_steps):
+            t = self.time_vec[i]
+            initial_term   = self.x_init * np.exp(self.theta * t)
+            drift_term     = self.MU * (1-np.exp(self.theta * t))
+            diffusion_term = self.SIGMA * integral_term[i]
+
+            x[i+1] = initial_term + drift_term + diffusion_term
         
         return x
-
-langevin = model()
-euler_maruyama = langevin.euler_maruyama_langevin()
-milstein       = langevin.milstein_langevin()
-exact          = langevin.exact_solution()
 
 print()
