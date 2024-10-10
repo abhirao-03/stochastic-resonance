@@ -62,6 +62,7 @@ class model():
 
         for i in range(1, len(self.time_vec)):
             t = self.time_vec[i]
+            
             initial = self.x_init*jnp.exp(-theta*t)
             drift   = self.mean*(1-jnp.exp(theta*t))
             noise   = ((b)/(jnp.sqrt(2*theta)))*self.noise[i]
@@ -71,6 +72,8 @@ class model():
         return x
 
 langevin = model()
-exact = langevin.exact_solution()
+euler_maruyama = langevin.euler_maruyama_langevin()
+milstein       = langevin.milstein_langevin()
+exact          = langevin.exact_solution()
 
 print()
