@@ -36,6 +36,8 @@ class solver():
         return x
 
     def exact_solution(self):
+        assert self.sde != sde.langevin_SDE, 'This SDE is currently not supported for exact solution'
+
         x = np.zeros(self.sde.num_steps)
         x[0] = self.sde.x_init
 
