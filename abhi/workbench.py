@@ -10,11 +10,13 @@ solver = solvers.solver(black_sholes_SDE)
 implicit = solver.full_implicit()
 euler = solver.euler_maruyama()
 milstein = solver.milstein()
+EM_implicit = solver.EM_implicit
 #exact = solver.exact_solution()            #currently not implemented
 
 plt.plot(black_sholes_SDE.time_vec, implicit, label = 'implicit')
 plt.plot(black_sholes_SDE.time_vec, euler, label = 'euler')
 plt.plot(black_sholes_SDE.time_vec, milstein, label = 'milstein')
+plt.plot(black_sholes_SDE.time_vec, EM_implicit,label = 'EM implicit' )
 #plt.plot(black_sholes_SDE.time_vec, exact)
 plt.xlabel('time')
 plt.ylabel('$X(t)$')

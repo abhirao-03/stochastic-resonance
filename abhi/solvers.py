@@ -70,3 +70,12 @@ class solver():
             x[i+1] = update
     
         return x
+    
+    def EM_implicit(self):
+        x=np.zeros(1000)
+        x[0] = 1
+
+        for i in range(1000 -1):
+            x[i+1] = x[i]*(1+self.sde.SIGMA * self.sde.noise[i])/(1-self.sde.MU * self.sde.dt)
+    
+        return x
