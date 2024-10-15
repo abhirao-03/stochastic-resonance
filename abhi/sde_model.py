@@ -2,21 +2,22 @@ import numpy as np
 import matplotlib.pyplot as plt
 import numpy.random as random
 
-class langevin_SDE():
-    def __init__(self, mean=0.0, std=0.1, tau=0.05, x_init=0.0, dt=0.01, time_horizon=10.0):
-        #distribution parameters
-        self.MU = mean
-        self.SIGMA = std
-        
-        #time parameters
+class model_params():
+    def __init__(self, x_init=0.0, dt=0.01, time_horizon=10.0):
         self.x_init = x_init
         self.dt = dt
-        self.tau = tau
-        self.theta = 1/self.tau
         self.t_end = time_horizon
         self.num_steps = int(self.t_end/self.dt)
         self.time_vec = np.linspace(0, self.t_end, self.num_steps)
         self.noise = random.normal(loc=0.0, scale=np.sqrt(self.dt), size=self.num_steps)
+
+class langevin_SDE(model_params):
+    def __init__(self, mean=0.0, std=0.1, tau=0.05):
+        #distribution parameters
+        self.MU = mean
+        self.SIGMA = std
+        self.tau = tau
+        self.theta = 1/self.tau
 
     def mu(self, x, _t):
             return self.theta * (self.MU - x)
