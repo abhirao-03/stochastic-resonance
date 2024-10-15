@@ -25,7 +25,7 @@ class langevin_SDE(model_params):
     def sigma(self, _y, _t):
             return self.SIGMA * np.sqrt(2/self.tau)
 
-class black_sholes_SDE(model_params):
+class black_scholes_SDE(model_params):
     def __init__(self, mu, sigma, theta = 1.0):
         super().__init__()
         self.MU = mu
