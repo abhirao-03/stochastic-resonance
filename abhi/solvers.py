@@ -59,7 +59,7 @@ class solver():
 
     def full_implicit(self):
 
-        assert self.sde != sde.black_sholes_SDE, 'This SDE is currently not supported for implicit methods'
+        assert self.sde != sde.black_scholes_SDE, 'This SDE is currently not supported for implicit methods'
 
         x = np.zeros(self.sde.num_steps)
         x[0] = self.sde.x_init
@@ -71,11 +71,15 @@ class solver():
     
         return x
     
-    def EM_implicit(self):
-        x=np.zeros(1000)
-        x[0] = 1
+    def drift_implicit(self):
 
-        for i in range(1000 -1):
-            x[i+1] = x[i]*(1+self.sde.SIGMA * self.sde.noise[i])/(1-self.sde.MU * self.sde.dt)
+        assert self.sde != sde.black_scholes_SDE, 'This SDE is currently not supported for implicit methods'
+
+        x = np.zeros(self.sde.num_steps)
+        x[0] = self.sde.x_init
+
+        for i in range(self.sde.num_steps - 1):
+            delta_W = self.sde.noise[i + 1] - self.sde.noise[i]
+            x[i+1] = x[i]*(1+self.sde.SIGMA * delta_W)/(1-self.sde.MU * self.sde.dt)
     
         return x
