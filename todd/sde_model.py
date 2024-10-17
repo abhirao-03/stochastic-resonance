@@ -41,5 +41,3 @@ class black_scholes_SDE(model_params):
     
     def sigma(self, x, _t):
         return self.SIGMA * x
-
-print()
