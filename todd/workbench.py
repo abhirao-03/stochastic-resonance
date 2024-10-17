@@ -27,14 +27,19 @@ full_implicit = solver.full_implicit()
 drift_implicit = solver.drift_implicit()
 #exact    = solver.exact_solution()
 
-for trial in range(trials): 
-    plt.plot(black_sholes_SDE.time_vec, euler[:, trial], linestyle= "--", color="b")
-    plt.plot(black_sholes_SDE.time_vec, milstein[:, trial],linestyle="-.", color="g")
-    plt.plot(black_sholes_SDE.time_vec, full_implicit[:, trial],linestyle=":", color="r")
-    plt.plot(black_sholes_SDE.time_vec, drift_implicit[:, trial],linestyle="-", color="m")
-    #plt.plot(black_sholes_SDE.time_vec, exact[:, trial], linestyle="-", color="red")
+plt.plot(black_sholes_SDE.time_vec, euler[:, 0], linestyle= "-", color="r", label='Trial 1')
+plt.plot(black_sholes_SDE.time_vec, euler[:, 1], linestyle= "-.", color="g", label='Trial 2')
+plt.plot(black_sholes_SDE.time_vec, euler[:, 2], linestyle= "--", color="b", label='Trial 3')
+
+# for trial in range(trials): 
+    # plt.plot(black_sholes_SDE.time_vec, euler[:, trial], linestyle= "--", color="b", label=f'euler method trial{trial}')
+    # plt.plot(black_sholes_SDE.time_vec, milstein[:, trial],linestyle="-.", color="g")
+    # plt.plot(black_sholes_SDE.time_vec, full_implicit[:, trial],linestyle=":", color="r")
+    # plt.plot(black_sholes_SDE.time_vec, drift_implicit[:, trial],linestyle="-", color="m")
+    # plt.plot(black_sholes_SDE.time_vec, exact[:, trial], linestyle="-", color="red")
 
 plt.title('Euler-Maruyama & Milstein Simulation (Multiple Trials)')
 plt.xlabel('Time')
 plt.ylabel('X(t)')
+plt.legend()
 plt.show()

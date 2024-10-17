@@ -1,4 +1,4 @@
-from jax import grad
+from jax import grad, vmap
 import sde_model as sde
 import numpy as np
 import matplotlib.pyplot as plt
@@ -30,7 +30,7 @@ class solver():
             x[i + 1, :] = x[i, :] \
                          + self.sde.mu(x[i, :], t) * self.sde.dt \
                          + self.sde.sigma(x[i, :], t) * dW \
-                         + self.sde.sigma(x[i, :], t) * grad(lambda z: np.sum(self.sde.sigma(z, t)))(x[i, :]) * (dW**2 - self.sde.dt)
+                         + self.sde.sigma(x[i, :], t) * vmap(lambda z: grad(self.sde.sigma, argnums=(0))(z, t), in_axes=(0))(x[i, :]) * (dW**2 - self.sde.dt)
         return x
 
     def exact_solution(self):
