@@ -8,7 +8,7 @@ class solver():
         self.sde = sde
 
     def euler_maruyama(self):
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
@@ -20,7 +20,7 @@ class solver():
         return x
 
     def milstein(self):
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
@@ -56,7 +56,7 @@ class solver():
 
     def gbm_exact(self):
         assert self.sde != sde.gbm_SDE, 'This SDE is not supported. Inputs are a Geometric Brownian Motion SDE'
-        x = np.zeros(self.sde.num_steps, self.sde.num_trials)
+        x = np.zeros(self.sde.num_steps, self.sde.num_trajectories)
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
@@ -66,9 +66,9 @@ class solver():
 
     def full_implicit(self):
 
-        assert self.sde != sde.black_scholes_SDE, 'This SDE is currently not supported for implicit methods'
+        assert self.sde != sde.gbm_SDE, 'This SDE is currently not supported for implicit methods'
 
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
@@ -80,9 +80,9 @@ class solver():
     
     def drift_implicit(self):
 
-        assert self.sde != sde.black_scholes_SDE, 'This SDE is currently not supported for implicit methods'
+        assert self.sde != sde.gbm_SDE, 'This SDE is currently not supported for implicit methods'
 
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
