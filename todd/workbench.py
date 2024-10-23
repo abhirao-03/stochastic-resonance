@@ -27,9 +27,10 @@ full_implicit = solver.full_implicit()
 drift_implicit = solver.drift_implicit()
 #exact    = solver.exact_solution()
 
-plt.plot(black_sholes_SDE.time_vec, euler[:, 0], linestyle= "-", color="r", label='Trial 1')
-plt.plot(black_sholes_SDE.time_vec, euler[:, 1], linestyle= "-.", color="g", label='Trial 2')
-plt.plot(black_sholes_SDE.time_vec, euler[:, 2], linestyle= "--", color="b", label='Trial 3')
+plt.plot(black_sholes_SDE.time_vec, euler[:, 0], linestyle= "-", color="r", label='Euler Maruyama')
+plt.plot(black_sholes_SDE.time_vec, euler[:, 0], linestyle= "-", color="r", label='Exact')
+#plt.plot(black_sholes_SDE.time_vec, euler[:, 1], linestyle= "-.", color="g", label='Trial 2')
+#plt.plot(black_sholes_SDE.time_vec, euler[:, 2], linestyle= "--", color="b", label='Trial 3')
 
 # for trial in range(trials): 
     # plt.plot(black_sholes_SDE.time_vec, euler[:, trial], linestyle= "--", color="b", label=f'euler method trial{trial}')
