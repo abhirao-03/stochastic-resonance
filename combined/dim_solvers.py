@@ -15,8 +15,10 @@ class solver():
             t = self.sde.time_vec[i]
             dW = self.sde.noise[i+1, :] - self.sde.noise[i, :]
             x[i + 1, :] = x[i, :] \
-                         + self.sde.mu(x[i, :], t) * self.sde.dt \
-                         + self.sde.sigma(x[i, :], t) * dW
+                         + vmap(self.sde.mu, in_axes=(0, None))(x[i, :], t) * self.sde.dt \
+                         + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * dW
+            
+            print(f'Running EM iter {i}')
         return x
 
     def milstein(self):
