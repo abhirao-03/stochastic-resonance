@@ -10,7 +10,7 @@ class model_params():
         self.time_vec = np.linspace(0, self.t_end, self.num_steps)
         self.num_trajectories = num_trajectories
         random.seed(1)
-        self.noise = random.normal(loc=0.0, scale=np.sqrt(self.dt), size=(self.num_steps, self.num_trials))
+        self.noise = random.normal(loc=0.0, scale=self.dt, size=(self.num_steps, self.num_trajectories))
 
 
 class langevin_SDE(model_params):
@@ -41,3 +41,10 @@ class gbm_SDE(model_params):
     
     def sigma(self, x, _t):
         return self.SIGMA * x
+
+
+class osc_climate_SDE(model_params):
+    def __init__(self, T = 100000, num_trajectories=1):
+        super().__init__(x_init=1.0, dt=0.1, time_horizon=100000, num_trajectories=num_trajectories)
+
+    
