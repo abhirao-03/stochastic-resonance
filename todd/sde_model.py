@@ -1,6 +1,7 @@
-import numpy as np
-import matplotlib.pyplot as plt
+from jax import grad, vmap
+import potentials as potential
 import numpy.random as random
+import numpy as np
 
 class model_params():
     def __init__(self, x_init=1.0, dt=0.01, time_horizon=10.0, num_trials=1):
@@ -11,7 +12,7 @@ class model_params():
         self.time_vec = np.linspace(0, self.t_end, self.num_steps)
         self.num_trials = num_trials
         random.seed(1)
-        self.noise = random.normal(loc=0.0, scale=np.sqrt(self.dt), size=(self.num_steps, self.num_trials))
+        self.noise = random.normal(loc=0.0, scale=np.sqrt(self.dt), size=(self.num_steps, self.num_trajectories))
 
 class langevin_SDE(model_params):
     def __init__(self, mean=0.0, std=0.1, tau=0.05, num_trials=1):
@@ -41,3 +42,16 @@ class black_scholes_SDE(model_params):
     
     def sigma(self, x, _t):
         return self.SIGMA * x
+    
+
+class sin_climate_SDE(model_params):
+    def __init__(self, std=0.01, mean = 0, num_trajectories=1):
+        super().__init__(num_trajectories=num_trajectories)
+        self.SIGMA = std
+        self.MU=mean
+
+    def sigma(self, x, _t):
+     return np.sqrt(self.SIGMA)
+    
+    def mu(self, x, _t):
+     return (-(grad(potential.stable_potential(x)))-0.1*(np.sin((2*np.pi*t)/T)))

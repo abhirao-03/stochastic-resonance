@@ -81,3 +81,5 @@ class solver():
             x[i+1, :] = x[i, :]*(1+self.sde.SIGMA * dW)/(1-self.sde.MU * self.sde.dt)
     
         return x
+    
+    
