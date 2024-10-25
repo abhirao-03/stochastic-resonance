@@ -57,3 +57,16 @@ class climate_sde(model_params):
     
     def sigma(self, x, t):
         return 1.0
+    
+class climate_sde_2(model_params):
+    def __init__(self, T, epsilon=0.2):
+        super().__init__(x_init=1.0, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
+        self.T = T
+        self.epsilon = epsilon
+        self.noise = random.normal(loc=0.0, scale=epsilon*self.dt, size=(self.num_steps, self.num_trajectories))
+
+    def mu(self, x, t):
+        return -grad(sin_potential, argnums=(0))(x, t)-0.1*(np.sin((2*np.pi*t)/self.T))
+    
+    def sigma(self, x, t):
+        return 1
