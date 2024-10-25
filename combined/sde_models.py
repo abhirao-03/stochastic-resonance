@@ -12,6 +12,7 @@ class model_params():
         random.seed(1)
         self.noise = random.normal(loc=0.0, scale=np.sqrt(self.dt), size=(self.num_steps, self.num_trials))
 
+
 class langevin_SDE(model_params):
     def __init__(self, mean=0.0, std=0.1, tau=0.05, num_trajectories=1):
         #distribution parameters
@@ -26,6 +27,7 @@ class langevin_SDE(model_params):
 
     def sigma(self, _y, _t):
             return self.SIGMA * np.sqrt(2/self.tau)
+
 
 class gbm_SDE(model_params):
     def __init__(self, mu, sigma, theta = 1.0, num_trajectories=1):
