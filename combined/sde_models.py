@@ -1,5 +1,5 @@
-import numpy.random as random
-import numpy as np
+import jax.random as random
+import jax.numpy as jnp
 from jax import grad
 from potentials import *
 
@@ -9,11 +9,11 @@ class model_params():
         self.dt = dt
         self.t_end = time_horizon
         self.num_steps = int(self.t_end/self.dt)
-        self.time_vec = np.linspace(0, self.t_end, self.num_steps)
+        self.time_vec = jnp.linspace(0, self.t_end, self.num_steps)
         self.num_trajectories = num_trajectories
         
-        random.seed(1)
-        self.noise = random.normal(loc=0.0, scale=self.dt, size=(self.num_steps, self.num_trajectories))
+        self.key = random.PRNGKey(1)
+        self.noise = jnp.sqrt(self.dt) * random.normal(self.key, shape=(self.num_steps, self.num_trajectories))
 
 
 class langevin_SDE(model_params):
@@ -29,7 +29,7 @@ class langevin_SDE(model_params):
             return self.theta * (self.MU - x)
 
     def sigma(self, _y, _t):
-            return self.SIGMA * np.sqrt(2/self.tau)
+            return self.SIGMA * jnp.sqrt(2/self.tau)
 
 
 class gbm_SDE(model_params):
@@ -50,10 +50,10 @@ class climate_sde(model_params):
     def __init__(self, epsilon=0.2):
         super().__init__(x_init=1.0, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
         self.epsilon = epsilon
-        self.noise = random.normal(loc=0.0, scale=epsilon*self.dt, size=(self.num_steps, self.num_trajectories))
+        self.noise = jnp.sqrt(epsilon*self.dt) * random.normal(self.key, shape=(self.num_steps, self.num_trajectories))
 
     def mu(self, x, t):
         return -grad(sin_potential, argnums=(0))(x, t)
     
-    def sigma(self, x, t):
+    def sigma(self, x=0.0, t=0.0):
         return 1.0
