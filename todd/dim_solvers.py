@@ -1,40 +1,41 @@
 from jax import grad, vmap
-import sde_model as sde
 import numpy as np
-import matplotlib.pyplot as plt
-import numpy.random as random
+import sde_models as sde
+
 
 class solver():
     def __init__(self, sde):
         self.sde = sde
 
     def euler_maruyama(self):
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
             t = self.sde.time_vec[i]
             dW = self.sde.noise[i+1, :] - self.sde.noise[i, :]
             x[i + 1, :] = x[i, :] \
-                         + self.sde.mu(x[i, :], t) * self.sde.dt \
-                         + self.sde.sigma(x[i, :], t) * dW
+                         + vmap(self.sde.mu, in_axes=(0, None))(x[i, :], t) * self.sde.dt \
+                         + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * dW
+            
+            print(f'Running EM iter {i}')
         return x
 
     def milstein(self):
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
             t = self.sde.time_vec[i]
             dW = self.sde.noise[i + 1, :] - self.sde.noise[i, :]
             x[i + 1, :] = x[i, :] \
-                         + self.sde.mu(x[i, :], t) * self.sde.dt \
-                         + self.sde.sigma(x[i, :], t) * dW \
-                         + self.sde.sigma(x[i, :], t) * vmap(lambda z: grad(self.sde.sigma, argnums=(0))(z, t), in_axes=(0))(x[i, :]) * (dW**2 - self.sde.dt)
+                         + vmap(self.sde.mu, in_axes=(0, None))(x[i, :], t) * self.sde.dt \
+                         + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * dW \
+                         + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * vmap(lambda z: grad(self.sde.sigma, argnums=(0))(z, t), in_axes=(0))(x[i, :]) * (dW**2 - self.sde.dt)
         return x
 
-    def exact_solution(self):
-        assert self.sde != sde.langevin_SDE, 'This SDE is currently not supported for exact solution'
+    def langevin_exact(self):
+        assert self.sde != sde.langevin_SDE, 'This SDE is not supported. Inputs are a Langevin SDE'
 
         x = np.zeros(self.sde.num_steps)
         x[0] = self.sde.x_init
@@ -55,11 +56,21 @@ class solver():
         
         return x
 
+    def gbm_exact(self):
+        assert self.sde != sde.gbm_SDE, 'This SDE is not supported. Inputs are a Geometric Brownian Motion SDE'
+        x = np.zeros(self.sde.num_steps, self.sde.num_trajectories)
+        x[0, :] = self.sde.x_init
+
+        for i in range(self.sde.num_steps - 1):
+            t = self.sde.time_vec[i]
+            x[i+1, :] = self.sde.x_init * np.exp((self.sde.MU - (self.sde.SIGMA**2)/2)*t - self.sde.noise[i, :])
+
+
     def full_implicit(self):
 
-        assert self.sde != sde.black_scholes_SDE, 'This SDE is currently not supported for implicit methods'
+        assert self.sde != sde.gbm_SDE, 'This SDE is currently not supported for implicit methods'
 
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
@@ -71,9 +82,9 @@ class solver():
     
     def drift_implicit(self):
 
-        assert self.sde != sde.black_scholes_SDE, 'This SDE is currently not supported for implicit methods'
+        assert self.sde != sde.gbm_SDE, 'This SDE is currently not supported for implicit methods'
 
-        x = np.zeros((self.sde.num_steps, self.sde.num_trials))
+        x = np.zeros((self.sde.num_steps, self.sde.num_trajectories))
         x[0, :] = self.sde.x_init
 
         for i in range(self.sde.num_steps - 1):
@@ -81,5 +92,3 @@ class solver():
             x[i+1, :] = x[i, :]*(1+self.sde.SIGMA * dW)/(1-self.sde.MU * self.sde.dt)
     
         return x
-    
-    
