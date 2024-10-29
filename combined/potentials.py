@@ -23,3 +23,4 @@ def sin_potential(x, t, period = 10000):
     osc = jnp.sin((2*jnp.pi*t)/period)*x
 
     return stationary + osc + c
+

@@ -67,6 +67,8 @@ class solver():
         for i in range(self.sde.num_steps - 1):
             t = self.sde.time_vec[i]
             x = x.at[i+1, :].set(self.sde.x_init * jnp.exp((self.sde.MU - (self.sde.SIGMA**2)/2)*t - self.sde.noise[i, :]))
+        
+        return x
 
 
     def full_implicit(self):

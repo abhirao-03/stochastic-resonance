@@ -1,11 +1,14 @@
 import sde_models as sde
 from dim_solvers import *
 import matplotlib.pyplot as plt
+import jax.numpy as jnp
 
 osc_sde = sde.climate_sde()
 em_solver = solver(osc_sde)
 
 em_sim = em_solver.euler_maruyama()
+
+jnp.save('em_sim.npy', em_sim)
 
 plt.plot(osc_sde.time_vec, em_sim)
 plt.title('Climate SDE E-M Scheme')
