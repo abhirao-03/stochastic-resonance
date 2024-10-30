@@ -59,15 +59,14 @@ class climate_sde(model_params):
         return 1.0
     
 class climate_sde_2(model_params):
-    def __init__(self, T=100000, epsilon=10):
-        self.time_horizon = 1000
-        super().__init__(x_init=288.6, dt = 0.1, time_horizon=self.time_horizon, num_trajectories=1)
+    def __init__(self, T=100000, epsilon=0.9):
+        super().__init__(x_init=-0.1, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
         self.epsilon = epsilon
         self.T = T
-        self.noise = random.normal(loc=0.0, scale=epsilon*self.dt, size=(self.num_steps, self.num_trajectories))
+        self.noise = random.normal(loc=0.0, scale=np.sqrt(epsilon)*self.dt, size=(self.num_steps, self.num_trajectories))
 
     def mu(self, x, t):
-        Q=0.1
+        Q=1.4
         return -grad(stable_potential, argnums=(0))(x)-Q*(np.sin((2*np.pi*t)/self.T))
     
     def sigma(self, x, t):

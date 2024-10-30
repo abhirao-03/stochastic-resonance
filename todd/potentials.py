@@ -7,10 +7,10 @@ def poor_potential(x):
     return (x**4)/4 - (850.5/3)*x**3 + (241091.72/2)*x**2 - 22778441.868*x +1613920200.24048
 
 def stable_potential(x):
-    a = 0.01
-    b = 0
+    a = 2
+    b = -2
 
-    X_temp = a*(x - 278.6)**2*(x - 288.6)**2+b
+    X_temp = a*(x - 1)**2*(x + 1)**2+b
 
     return X_temp
 
