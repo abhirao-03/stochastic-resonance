@@ -1,4 +1,5 @@
 from jax import grad, vmap, jit
+import jax
 import jax.numpy as jnp
 import sde_models as sde
 
@@ -19,8 +20,7 @@ class solver():
                          + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * dW
                          )
             
-            if i % 1000 == 0:
-                print(f'On iteration {i} with x_i = {x[i + 1, :]}')
+            jax.debug.print(f'On iteration {i} with x_i = {x[i + 1, :]}')
         return x
 
     def milstein(self):
