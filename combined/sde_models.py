@@ -47,13 +47,17 @@ class gbm_SDE(model_params):
 
 
 class climate_sde(model_params):
-    def __init__(self, epsilon=0.2):
-        super().__init__(x_init=1.0, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
+    def __init__(self, x_init = 0.0, epsilon=0.1, potential = 'none'):
+        super().__init__(x_init=x_init, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
+        self.potential = potential
         self.epsilon = epsilon
-        self.noise = jnp.sqrt(epsilon*self.dt) * random.normal(self.key, shape=(self.num_steps, self.num_trajectories))
+        self.noise = jnp.sqrt(epsilon * self.dt) * random.normal(self.key, shape=(self.num_steps, self.num_trajectories))
 
     def mu(self, x, t):
-        return -grad(sin_potential, argnums=(0))(x, t)
+        if self.potential == 'sin':
+            return -grad(sin_potential, argnums=(0))(x, t)
+        else:
+            return -d_final__d_x(x, t)
     
     def sigma(self, x=0.0, t=0.0):
         return 1.0
