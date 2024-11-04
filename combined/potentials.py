@@ -15,13 +15,12 @@ def stable_potential(x):
 
     return X_temp + c
 
-def sin_potential(x, t):
+def sin_potential(x, t, period=100000):
     a = 1.1
     b = -3.4
     c = -1.7
-    T = 100000
 
     stationary = a*x**4 + b*x**2
-    osc = np.sin((2*np.pi*t)/T)*x
+    osc = np.sin((2*np.pi*t)/period)*x
 
     return stationary + osc + c

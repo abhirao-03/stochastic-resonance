@@ -18,7 +18,8 @@ class solver():
                          + vmap(self.sde.mu, in_axes=(0, None))(x[i, :], t) * self.sde.dt \
                          + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * dW
             
-            print(f'Running EM iter {i}')
+            if i % 1000 == 0:
+                print(f'Reached Iteration {i} with x_i = {x[i+1, :]}')
         return x
 
     def milstein(self):

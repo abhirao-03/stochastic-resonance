@@ -48,7 +48,7 @@ class gbm_SDE(model_params):
 
 class climate_sde(model_params):
     def __init__(self, epsilon=0.2):
-        super().__init__(x_init=1.0, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
+        super().__init__(x_init=1.0, dt = 0.2, time_horizon=100000.0, num_trajectories=1)
         self.epsilon = epsilon
         self.noise = random.normal(loc=0.0, scale=epsilon*self.dt, size=(self.num_steps, self.num_trajectories))
 
