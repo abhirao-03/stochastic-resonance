@@ -19,8 +19,8 @@ class solver():
                          + vmap(self.sde.mu, in_axes=(0, None))(x[i, :], t) * self.sde.dt \
                          + vmap(self.sde.sigma, in_axes=(0, None))(x[i, :], t) * dW
                          )
-            
-            jax.debug.print(f'On iteration {i} with x_i = {x[i + 1, :]}')
+            if i % 100 == 0:
+                jax.debug.print(f'On iteration {i} with x_i = {x[i + 1, :]}')
         return x
 
     def milstein(self):

@@ -4,7 +4,7 @@ from jax import grad
 from potentials import *
 
 class model_params():
-    def __init__(self, x_init=1.0, dt=0.01, time_horizon=10.0, num_trajectories=1):
+    def __init__(self, x_init=1.0, dt=0.1, time_horizon=10.0, num_trajectories=1):
         self.x_init = x_init
         self.dt = dt
         self.t_end = time_horizon
@@ -47,8 +47,8 @@ class gbm_SDE(model_params):
 
 
 class climate_sde(model_params):
-    def __init__(self, x_init = 0.0, epsilon=0.1, potential = 'none'):
-        super().__init__(x_init=x_init, dt = 0.1, time_horizon=1000.0, num_trajectories=1)
+    def __init__(self, x_init=0.0, epsilon=0.1, dt=0.1,  time_horizon=1000, potential='sin'):
+        super().__init__(x_init=x_init, dt = dt, time_horizon=time_horizon, num_trajectories=1)
         self.potential = potential
         self.epsilon = epsilon
         self.noise = jnp.sqrt(epsilon * self.dt) * random.normal(self.key, shape=(self.num_steps, self.num_trajectories))
@@ -56,8 +56,12 @@ class climate_sde(model_params):
     def mu(self, x, t):
         if self.potential == 'sin':
             return -grad(sin_potential, argnums=(0))(x, t)
-        else:
-            return -d_final__d_x(x, t)
+
+        elif self.potential == 'inst_switch':
+            return -d_inst_switch__d_x(x, t)
+        
+        elif self.potential == 'polynomial':
+            return -d_poly__d_x(x, t)
     
     def sigma(self, x=0.0, t=0.0):
         return 1.0

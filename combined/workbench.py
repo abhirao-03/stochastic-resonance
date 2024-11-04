@@ -3,8 +3,8 @@ from dim_solvers import *
 import matplotlib.pyplot as plt
 import jax.numpy as jnp
 
-sin_sde = sde.climate_sde(x_init = 0.0, epsilon=0.2, potential='sin')
-pol_sde = sde.climate_sde(x_init = 0.0, epsilon=0.2)
+sin_sde = sde.climate_sde(x_init = 0.0, epsilon=0.2, dt=0.1, time_horizon=1000, potential='sin')
+pol_sde = sde.climate_sde(x_init = 0.0, epsilon=5.0, dt=0.01, time_horizon=200, potential='polynomial')
 
 sin_solver = solver(sin_sde)
 pol_solver = solver(pol_sde)
