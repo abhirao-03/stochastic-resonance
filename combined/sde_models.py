@@ -61,7 +61,7 @@ class climate_sde(model_params):
             return -grad(inst_switch, argnums=(0))(x, t)
         
         elif self.potential == 'polynomial':
-            return -grad(poly_potential, argnums=(0))(x, t)
+            return -d_poly__d_x(x, t)
     
     def sigma(self, x=0.0, t=0.0):
         return 1.0
