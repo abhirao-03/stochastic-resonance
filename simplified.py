@@ -52,23 +52,6 @@ def euler_maruyama():
 
 x_poly, mu_track = euler_maruyama()
 
-# x = np.linspace(-1.1, 1.1, 1000)
-# dP_1 = d_poly__d_x(x, 0)
-# dP_2 = d_poly__d_x(x, 25)
-# dP_3 = d_poly__d_x(x, 50)
-# dP_4 = d_poly__d_x(x, 75)
-# dP_5 = d_poly__d_x(x, 100)
-
-# plt.plot(x, dP_1, label='0')
-# plt.plot(x, dP_2, label='25')
-# plt.plot(x, dP_3, label='50')
-# plt.plot(x, dP_4, label='75')
-# plt.plot(x, dP_5, label='100')
-# plt.legend()
-# plt.show()
-
-
-
 
 plt.plot(time_vec[:-1], x_poly, label = 'polynomial')
 plt.plot(time_vec[:-1], mu_track, label = '$\mu$', alpha=0.2)
