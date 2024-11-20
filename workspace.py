@@ -1,5 +1,8 @@
 import sde_models as sde
 import dim_solvers as solvers
+import sys
+
+sys.path.append('')
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,5 +19,7 @@ plt.ylabel('$X(t)$')
 plt.ylim((-2, 2))
 plt.tight_layout()
 plt.show()
+
+np.save('em_sim.npy', em_sim)
 
 print("Completed Simulation")
