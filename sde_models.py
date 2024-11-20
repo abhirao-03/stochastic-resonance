@@ -5,7 +5,7 @@ from potentials import d_poly__d_x as polynomial_potential
 
 class model_params():
     def __init__(self, x_init=1.0, dt=0.1, time_horizon=10.0, num_trajectories=1):
-        self.x_init = x_init
+        self.x_init = np.ones((1, num_trajectories)) * x_init
         self.dt = dt
         self.time_horizon = time_horizon
         self.num_steps = int(self.time_horizon/self.dt)
