@@ -15,5 +15,8 @@ class solver():
             dW = self.sde.noise[i, :]
 
             x[i+1, :] = curr_x + self.sde.mu(curr_x, curr_t)*self.sde.dt + self.sde.sigma(curr_x, curr_t) * dW
-        
+
+            if np.isnan(x[i+1, :]).any() or np.isinf(x[i+1, :]).any():
+                raise ValueError(f'Encountered: {x[i+1, :]}')
+
         return x
