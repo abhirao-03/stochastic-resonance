@@ -1,8 +1,5 @@
 import sde_models as sde
 import dim_solvers as solvers
-import sys
-
-sys.path.append('')
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -11,13 +8,13 @@ num_trajectories = 100
 climate_sde = sde.climate_sde(x_init=0, epsilon=0.75, dt=0.01, time_horizon=1000, num_trajectories=num_trajectories)
 solver = solvers.solver(climate_sde)
 
-print("\n\n\nSTARTED SIMULATION")
+print("STARTED SIMULATION")
 em_sim = solver.euler_maruyama()
-print("\nCOMPLETED SIMULATION")
+print("COMPLETED SIMULATION")
 
-print("\nFINAL TRAJECTORY SIMULATION")
+print("PLOTTING FIRST TRAJECTORY")
 
-plt.plot(climate_sde.time_vec, em_sim[:, 0])
+plt.plot(climate_sde.time_vec, em_sim[:, 0], label='First Trajectory')
 plt.legend()
 plt.xlabel('$t$')
 plt.ylabel('$X(t)$')
@@ -27,3 +24,4 @@ plt.tight_layout()
 plt.show()
 
 np.save('em_sim.npy', em_sim)
+print("SAVED SIMULATED VALUES TO 'em_sim.npy'")

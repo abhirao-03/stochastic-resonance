@@ -12,14 +12,15 @@ class model_params():
         self.time_vec = np.linspace(0, self.time_horizon, self.num_steps)
         self.num_trajectories = num_trajectories
         
+        print('GENERATING NOISE')
         self.noise = random.normal(loc=0.0, scale = dt**(1/2), size=(self.num_steps, self.num_trajectories))
+        print('COMPLETED NOISE GENERATION')
 
 
 class climate_sde(model_params):
     def __init__(self, x_init=0.0, epsilon=0.1, dt=0.1,  time_horizon=100, num_trajectories=1):
         super().__init__(x_init=x_init, dt=dt, time_horizon=time_horizon, num_trajectories=num_trajectories)
         self.epsilon = epsilon
-        self.noise = random.normal(loc=0.0, scale = dt**(1/2), size=(self.num_steps, self.num_trajectories))
 
     def mu(self, x, t):
             return -polynomial_potential(x,t)
