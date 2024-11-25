@@ -4,7 +4,7 @@ import dim_solvers as solvers
 import matplotlib.pyplot as plt
 import numpy as np
 
-num_trajectories = 100
+num_trajectories = 1000
 climate_sde = sde.climate_sde(x_init=0, epsilon=0.75, dt=0.01, time_horizon=1000, num_trajectories=num_trajectories)
 solver = solvers.solver(climate_sde)
 
@@ -14,11 +14,10 @@ print("COMPLETED SIMULATION")
 
 print("PLOTTING FIRST TRAJECTORY")
 
-plt.plot(climate_sde.time_vec, em_sim[:, 0], label='First Trajectory')
-plt.legend()
+plt.plot(climate_sde.time_vec, em_sim[:, 0])
 plt.xlabel('$t$')
 plt.ylabel('$X(t)$')
-plt.title('Final Trajectory')
+plt.title('First Trajectory')
 plt.ylim((-2, 2))
 plt.tight_layout()
 plt.show()
