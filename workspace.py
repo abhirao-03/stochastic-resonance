@@ -22,5 +22,5 @@ plt.ylim((-2, 2))
 plt.tight_layout()
 plt.show()
 
-np.save('em_sim.npy', em_sim)
+np.save('results/em_sim.npy', em_sim)
 print("SAVED SIMULATED VALUES TO 'em_sim.npy'")
