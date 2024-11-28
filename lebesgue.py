@@ -12,7 +12,7 @@ all_interval_values  = []
 trajectory_number    = []
 
 for i in tqdm(range(len(data))):
-    d1 = data[0]
+    d1 = data[i]
     neg_well = d1 < 0
     arg_tracker = [0] + [j  for j in range(1, len(neg_well)) if neg_well[j] != neg_well[j - 1]] + [len(time_vec) - 1]
 
@@ -30,9 +30,9 @@ for i in tqdm(range(len(data))):
             all_interval_lengths.append(interval)
             all_interval_values.append('negative')
 
-data = {'trajectory': trajectory_number,
-        'interval_length': all_interval_lengths,
-        'interval_value': all_interval_values}
+data_builder = {'trajectory': trajectory_number,
+                'interval_length': all_interval_lengths,
+                'interval_value': all_interval_values}
 
-df = pd.DataFrame(data=data)
+df = pd.DataFrame(data=data_builder)
 df.to_pickle('results/intervals.pkl')
