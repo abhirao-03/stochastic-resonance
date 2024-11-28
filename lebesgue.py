@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-data = np.load('./results/em_sim.npy')
+data = np.load('em_sim.npy')
 data = data.T
 
 time_vec = np.linspace(0, 1000, int((1000)/0.01))
