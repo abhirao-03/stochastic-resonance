@@ -1,11 +1,18 @@
 import sde_models as sde
 import dim_solvers as solvers
+from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_potential
 
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 num_trajectories = 1
-climate_sde = sde.climate_sde(x_init=0, epsilon=0.75, dt=0.01, time_horizon=1000, num_trajectories=num_trajectories)
+climate_sde = sde.climate_sde(x_init=0,
+                              epsilon=0.75,
+                              dt=0.01,
+                              time_horizon=1000,
+                              num_trajectories=num_trajectories,
+                              potential=)
 solver = solvers.solver(climate_sde)
 
 print("STARTED SIMULATION")

@@ -41,7 +41,7 @@ def const_pos_potential(x, t, period=100):
     
     return all_scale*(a6*6*x**5 + a5*5*x**4 + a4*4*x**3 + a3*3*x**2 + a2*2*x + a1)
 
-def d_V_pot(x, t, min_val):
+def d_V_pot(x, t, min_val=5):
     if x < -1:
         return -min_val
     if -1 < x and x < 0:
