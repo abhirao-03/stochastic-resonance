@@ -1,7 +1,8 @@
 import numpy as np
 import numpy.random as random
-from jax import vmap
+from jax import grad
 from potentials import d_poly__d_x as polynomial_potential
+from potentials import *
 
 class model_params():
     def __init__(self, x_init=1.0, dt=0.1, time_horizon=10.0, num_trajectories=1):
@@ -23,7 +24,7 @@ class climate_sde(model_params):
         self.epsilon = epsilon
 
     def mu(self, x, t):
-            return -polynomial_potential(x,t)
+            return -d_V_pot(x, t, min_val=5)
     
     def sigma(self, x=0.0, t=0.0):
         return self.epsilon ** (1/2)

@@ -4,7 +4,7 @@ import dim_solvers as solvers
 import matplotlib.pyplot as plt
 import numpy as np
 
-num_trajectories = 10000
+num_trajectories = 1
 climate_sde = sde.climate_sde(x_init=0, epsilon=0.75, dt=0.01, time_horizon=1000, num_trajectories=num_trajectories)
 solver = solvers.solver(climate_sde)
 
