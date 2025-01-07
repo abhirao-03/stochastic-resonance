@@ -52,3 +52,14 @@ def d_V_pot(x, t, min_val=5):
         return min_val
     if x == -1 or x == 1 or x == 0:
         return 0
+    
+def d_V_pot(x, t, min_val=5):
+    # Multi-dimensional V potential.
+    x = np.array(x)
+    y = np.zeros_like(x)
+    y[x < -1] = -min_val
+    y[np.logical_and(-1 < x, x < 0)] = min_val
+    y[np.logical_and(0 < x, x < 1)] = -min_val
+    y[x > 1] = min_val
+    y[np.logical_or(x == -1, x == 1, x == 0)] = 0
+    return y

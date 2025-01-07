@@ -13,7 +13,7 @@ climate_sde = sde.climate_sde(x_init = 0,
                               dt = 0.01,
                               time_horizon = 1000,
                               num_trajectories = num_trajectories,
-                              potential = d_poly__d_x)
+                              potential = d_V_pot)
 solver = solvers.solver(climate_sde)
 
 print("STARTED SIMULATION")
@@ -22,7 +22,9 @@ print("COMPLETED SIMULATION")
 
 print("PLOTTING FIRST TRAJECTORY")
 
-plt.plot(climate_sde.time_vec, em_sim[:, 0])
+plt.plot(climate_sde.time_vec, em_sim[:, 0], alpha=0.1)
+plt.plot(climate_sde.time_vec, em_sim[:, 1], alpha=0.1)
+plt.plot(climate_sde.time_vec, em_sim[:, 2], alpha=0.1)
 plt.xlabel('$t$')
 plt.ylabel('$X(t)$')
 plt.title('First Trajectory')
@@ -65,4 +67,4 @@ data_builder = {'trajectory': trajectory_number,
                 'interval_value': all_interval_values}
 
 df = pd.DataFrame(data=data_builder)
-df.to_pickle('results/lebesgue.pkl')
+df.to_pickle('results/V_pot.pkl')
