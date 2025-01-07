@@ -1,8 +1,38 @@
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
 
-data = np.load('em_sim.npy')
+import sde_models as sde
+import dim_solvers as solvers
+from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_potential
+
+num_trajectories = 1000
+climate_sde = sde.climate_sde(x_init = 0,
+                              epsilon = 0.75,
+                              dt = 0.01,
+                              time_horizon = 1000,
+                              num_trajectories = num_trajectories,
+                              potential = d_poly__d_x)
+solver = solvers.solver(climate_sde)
+
+print("STARTED SIMULATION")
+em_sim = solver.euler_maruyama()
+print("COMPLETED SIMULATION")
+
+print("PLOTTING FIRST TRAJECTORY")
+
+plt.plot(climate_sde.time_vec, em_sim[:, 0])
+plt.xlabel('$t$')
+plt.ylabel('$X(t)$')
+plt.title('First Trajectory')
+plt.ylim((-2, 2))
+plt.tight_layout()
+plt.show()
+
+print("STARTING WELL ANALYSIS")
+
+data = em_sim
 data = data.T
 
 time_vec = np.linspace(0, 1000, int((1000)/0.01))
@@ -35,4 +65,4 @@ data_builder = {'trajectory': trajectory_number,
                 'interval_value': all_interval_values}
 
 df = pd.DataFrame(data=data_builder)
-df.to_pickle('results/intervals.pkl')
+df.to_pickle('results/lebesgue.pkl')

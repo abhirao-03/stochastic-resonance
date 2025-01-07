@@ -5,14 +5,13 @@ from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_pote
 import matplotlib.pyplot as plt
 import numpy as np
 
-
-num_trajectories = 1
-climate_sde = sde.climate_sde(x_init=0,
-                              epsilon=0.75,
-                              dt=0.01,
-                              time_horizon=1000,
-                              num_trajectories=num_trajectories,
-                              potential=)
+num_trajectories = 5
+climate_sde = sde.climate_sde(x_init = 0,
+                              epsilon = 0.75,
+                              dt = 0.01,
+                              time_horizon = 1000,
+                              num_trajectories = num_trajectories,
+                              potential = d_poly__d_x)
 solver = solvers.solver(climate_sde)
 
 print("STARTED SIMULATION")
@@ -28,5 +27,7 @@ plt.title('First Trajectory')
 plt.ylim((-2, 2))
 plt.tight_layout()
 plt.show()
+
+np.save('em_sim.npy', em_sim)
 
 print("SAVED SIMULATED VALUES TO 'em_sim.npy'")

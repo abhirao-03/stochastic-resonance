@@ -16,7 +16,7 @@ class model_params():
 
 
 class climate_sde(model_params):
-    def __init__(self, potential: callable, x_init=0.0, epsilon=0.1, dt=0.1,  time_horizon=100, num_trajectories=1):
+    def __init__(self, potential, x_init=0.0, epsilon=0.1, dt=0.1,  time_horizon=100, num_trajectories=1):
         super().__init__(x_init=x_init, dt=dt, time_horizon=time_horizon, num_trajectories=num_trajectories)
         self.epsilon = epsilon
         self.potential = potential
