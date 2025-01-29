@@ -11,9 +11,9 @@ num_trajectories = 1000
 climate_sde = sde.climate_sde(x_init = 0,
                               epsilon = 0.75,
                               dt = 0.01,
-                              time_horizon = 1000,
+                              time_horizon = 100,
                               num_trajectories = num_trajectories,
-                              potential = d_V_pot)
+                              potential = const_neg_potential)
 solver = solvers.solver(climate_sde)
 
 print("STARTED SIMULATION")
@@ -41,7 +41,9 @@ time_vec = np.linspace(0, 1000, int((1000)/0.01))
 
 all_interval_lengths = []
 all_interval_values  = []
+all_well_types       = []
 trajectory_number    = []
+
 
 for i in tqdm(range(len(data))):
     d1 = data[i]
@@ -58,13 +60,16 @@ for i in tqdm(range(len(data))):
         if d1[arg_tracker[k - 1]] >= 0:
             all_interval_lengths.append(interval)
             all_interval_values.append('positive')
+            all_well_types.append('shallow well')
         else:
             all_interval_lengths.append(interval)
             all_interval_values.append('negative')
+            all_well_types.append('deep well')
 
 data_builder = {'trajectory': trajectory_number,
                 'interval_length': all_interval_lengths,
-                'interval_value': all_interval_values}
+                'interval_value': all_interval_values,
+                'well_type': all_well_types}
 
 df = pd.DataFrame(data=data_builder)
-df.to_pickle('results/V_pot.pkl')
+df.to_pickle('results/test.pkl')
