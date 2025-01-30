@@ -2,14 +2,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
+import json
 
 import sde_models as sde
 import dim_solvers as solvers
 from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_potential
 
-num_trajectories = 1000
+# import json
+with open('sim_settings.json') as f:
+    settings = json.load(f)
+
+num_trajectories = 100
 climate_sde = sde.climate_sde(x_init = 0,
-                              epsilon = 0.75,
+                              want_jumps=True,
+                              jump_mult=settings['jump_mult'],
                               dt = 0.01,
                               time_horizon = 100,
                               num_trajectories = num_trajectories,
@@ -35,6 +41,7 @@ plt.show()
 print("STARTING WELL ANALYSIS")
 
 data = em_sim
+np.save('results/em_sim.npy', em_sim)
 data = data.T
 
 time_vec = np.linspace(0, 1000, int((1000)/0.01))
