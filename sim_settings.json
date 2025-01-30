@@ -1,3 +1,4 @@
 {
+    "want_jumps": true,
     "jump_mult" : 3.0
 }

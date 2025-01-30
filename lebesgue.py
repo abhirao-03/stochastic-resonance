@@ -14,12 +14,13 @@ with open('sim_settings.json') as f:
 
 num_trajectories = 100
 climate_sde = sde.climate_sde(x_init = 0,
-                              want_jumps=True,
-                              jump_mult=settings['jump_mult'],
+                              want_jumps = settings['want_jumps'],
+                              jump_mult = settings['jump_mult'],
                               dt = 0.01,
                               time_horizon = 100,
                               num_trajectories = num_trajectories,
                               potential = const_neg_potential)
+
 solver = solvers.solver(climate_sde)
 
 print("STARTED SIMULATION")
@@ -27,7 +28,6 @@ em_sim = solver.euler_maruyama()
 print("COMPLETED SIMULATION")
 
 print("PLOTTING FIRST TRAJECTORY")
-
 plt.plot(climate_sde.time_vec, em_sim[:, 0], alpha=0.1)
 plt.plot(climate_sde.time_vec, em_sim[:, 1], alpha=0.1)
 plt.plot(climate_sde.time_vec, em_sim[:, 2], alpha=0.1)
@@ -39,7 +39,6 @@ plt.tight_layout()
 plt.show()
 
 print("STARTING WELL ANALYSIS")
-
 data = em_sim
 np.save('results/em_sim.npy', em_sim)
 data = data.T
