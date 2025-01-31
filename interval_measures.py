@@ -5,26 +5,34 @@ from tqdm import tqdm
 import json
 
 import sde_models as sde
-import dim_solvers as solvers
+from dim_solvers import solver
 from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_potential
 
 # import json
 with open('sim_settings.json') as f:
     settings = json.load(f)
 
-num_trajectories = 100
+quick_setting = settings['quick_debug_scheme']
+
+if settings['debug_mode'] == True:
+    num_trajectories = quick_setting['num_trajectories']
+    time_horizon = quick_setting['time_horizon']
+else:
+    num_trajectories = 1000
+    time_horizon = 1000
+    
 climate_sde = sde.climate_sde(x_init = 0,
                               want_jumps = settings['want_jumps'],
                               jump_mult = settings['jump_mult'],
                               dt = 0.01,
-                              time_horizon = 100,
+                              time_horizon = time_horizon,
                               num_trajectories = num_trajectories,
                               potential = const_neg_potential)
 
-solver = solvers.solver(climate_sde)
+em_solver = solver(climate_sde)
 
 print("STARTED SIMULATION")
-em_sim = solver.euler_maruyama()
+em_sim = em_solver.euler_maruyama()
 print("COMPLETED SIMULATION")
 
 print("PLOTTING FIRST TRAJECTORY")
@@ -38,12 +46,14 @@ plt.ylim((-2, 2))
 plt.tight_layout()
 plt.show()
 
+if settings['save_trajectories'] == True:
+    np.save('results/em_sim.npy', em_sim)
+
 print("STARTING WELL ANALYSIS")
 data = em_sim
-np.save('results/em_sim.npy', em_sim)
 data = data.T
 
-time_vec = np.linspace(0, 1000, int((1000)/0.01))
+time_vec = climate_sde.time_vec
 
 all_interval_lengths = []
 all_interval_values  = []
@@ -67,6 +77,7 @@ for i in tqdm(range(len(data))):
             all_interval_lengths.append(interval)
             all_interval_values.append('positive')
             all_well_types.append('shallow well')
+
         else:
             all_interval_lengths.append(interval)
             all_interval_values.append('negative')

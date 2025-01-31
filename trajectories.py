@@ -1,6 +1,10 @@
 import sde_models as sde
-import dim_solvers as solvers
+from dim_solvers import solver
 from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_potential
+import json
+
+with open('sim_settings.json') as f:
+    settings = json.load(f)
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -12,10 +16,11 @@ climate_sde = sde.climate_sde(x_init = 0,
                               time_horizon = 1000,
                               num_trajectories = num_trajectories,
                               potential = d_poly__d_x)
-solver = solvers.solver(climate_sde)
+
+em_solver = solver(climate_sde)
 
 print("STARTED SIMULATION")
-em_sim = solver.euler_maruyama()
+em_sim = em_solver.euler_maruyama()
 print("COMPLETED SIMULATION")
 
 print("PLOTTING FIRST TRAJECTORY")
@@ -28,6 +33,7 @@ plt.ylim((-2, 2))
 plt.tight_layout()
 plt.show()
 
-np.save('em_sim.npy', em_sim)
+if settings['save_trajectories'] == True:
+    np.save('em_sim.npy', em_sim)
 
 print("SAVED SIMULATED VALUES TO 'em_sim.npy'")
