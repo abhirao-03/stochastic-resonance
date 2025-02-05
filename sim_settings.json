@@ -1,10 +1,10 @@
 {
     "debug_mode": true,
     "quick_debug_scheme": {
-        "num_trajectories": 1000,
+        "num_trajectories": 100,
         "time_horizon": 100
     },
     "want_jumps": true,
-    "jump_mult" : 2.5,
-    "save_trajectories": false
+    "jump_mult" : 3.5,
+    "save_trajectories": true
 }
