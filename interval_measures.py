@@ -20,14 +20,23 @@ if settings['debug_mode'] == True:
 else:
     num_trajectories = 1000
     time_horizon = 1000
-    
+
 climate_sde = sde.climate_sde(x_init = 0,
                               want_jumps = settings['want_jumps'],
                               jump_mult = settings['jump_mult'],
                               dt = 0.01,
                               time_horizon = time_horizon,
                               num_trajectories = num_trajectories,
-                              potential = const_neg_potential)
+                              potential = d_poly__d_x)
+
+if settings['potential'] == 'const_neg_potential':
+    climate_sde.potential = const_neg_potential
+
+if settings['potential'] == 'const_pos_potential':
+    climate_sde.potential = const_pos_potential
+
+if settings['potential'] == 'd_V_pot':
+    climate_sde.potential = d_V_pot
 
 em_solver = solver(climate_sde)
 
@@ -37,8 +46,6 @@ print("COMPLETED SIMULATION")
 
 print("PLOTTING FIRST TRAJECTORY")
 plt.plot(climate_sde.time_vec, em_sim[:, 0])
-# plt.plot(climate_sde.time_vec, em_sim[:, 1], alpha=0.2)
-# plt.plot(climate_sde.time_vec, em_sim[:, 2], alpha=0.2)
 plt.xlabel('$t$')
 plt.ylabel('$X(t)$')
 plt.title('First Trajectory')

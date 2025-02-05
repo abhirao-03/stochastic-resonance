@@ -20,7 +20,7 @@ class climate_sde(model_params):
         self.jump_mult = jump_mult
         
         if want_jumps == True:
-            self.epsilon = 4.29 / np.log(self.time_horizon) * jump_mult
+            self.epsilon = (4.29 / np.log(self.time_horizon)) * jump_mult
         else:
             self.epsilon = 4.29 / np.log(self.time_horizon) - 0.001
         
