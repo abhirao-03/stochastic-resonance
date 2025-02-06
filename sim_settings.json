@@ -7,5 +7,5 @@
     "want_jumps": true,
     "jump_mult" : 3,
     "save_trajectories": false,
-    "potential": "d_poly__d_x"
+    "potential": "const_neg_potential"
 }

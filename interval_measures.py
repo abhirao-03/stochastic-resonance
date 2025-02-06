@@ -21,7 +21,7 @@ else:
     num_trajectories = 1000
     time_horizon = 1000
 
-climate_sde = sde.climate_sde(x_init = 0,
+climate_sde = sde.climate_sde(x_init = -1,
                               want_jumps = settings['want_jumps'],
                               jump_mult = settings['jump_mult'],
                               dt = 0.01,
