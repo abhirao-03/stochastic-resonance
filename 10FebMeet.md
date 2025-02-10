@@ -20,5 +20,3 @@ compare against explicit solutions and showcase our numerical method
 validate our numerical method
 
 now that we've spoken about the validity of our method, move on to applying these methods on the problem at hand
-
-
