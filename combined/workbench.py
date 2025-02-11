@@ -1,4 +1,4 @@
-import sde_models as sde
+import combined.sde as sde
 from dim_solvers import *
 import matplotlib.pyplot as plt
 import jax.numpy as jnp

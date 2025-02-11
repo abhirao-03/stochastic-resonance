@@ -1,7 +1,7 @@
 import jax.random as random
 import jax.numpy as jnp
 from jax import grad
-from potentials import *
+from combined.potentials import *
 
 class model_params():
     def __init__(self, x_init=1.0, dt=0.1, time_horizon=10.0, num_trajectories=1):
@@ -17,9 +17,9 @@ class model_params():
 
 
 class langevin_SDE(model_params):
-    def __init__(self, mean=0.0, std=0.1, tau=0.05, num_trajectories=1):
+    def __init__(self, dt, mean=0.0, std=0.1, tau=0.05, num_trajectories=1):
         #distribution parameters
-        super().__init__(num_trajectories=num_trajectories)
+        super().__init__(dt=dt, num_trajectories=num_trajectories)
         self.MU = mean
         self.SIGMA = std
         self.tau = tau
@@ -33,8 +33,8 @@ class langevin_SDE(model_params):
 
 
 class gbm_SDE(model_params):
-    def __init__(self, mu, sigma, theta = 1.0, num_trajectories=1):
-        super().__init__(num_trajectories=num_trajectories)
+    def __init__(self, dt, mu, sigma, theta = 1.0, num_trajectories=1):
+        super().__init__(dt=dt, num_trajectories=num_trajectories)
         self.MU = mu
         self.SIGMA = sigma
         self.theta = theta
