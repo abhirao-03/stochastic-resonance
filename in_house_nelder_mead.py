@@ -16,8 +16,9 @@ initial_simplex = np.array([[eps_init, dt_init, time_hor_init],
                             [eps_init, dt_init*dt_pert, time_hor_init],
                             [eps_init, dt_init, time_hor_init + time_hor_pert]])
 
-p_vals = np.empty(shape=initial_simplex.shape[0])
+p_vals = np.empty(shape=(initial_simplex.shape[0], 2))
 for idx, vertex in enumerate(initial_simplex):
-    p_vals[idx] = run(vertex)
+    p_vals[idx] = np.array([run(vertex), vertex])
+
 
 print()
