@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Callable
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 from optimiser import run
@@ -8,8 +7,7 @@ def grid_search_jump_mult(
     n_points: int = 15,
     min_jump_mult: float = 3.02,
     max_jump_mult: float = 3.12,
-    samples_per_point: int = 1,
-) -> tuple[float, float, np.ndarray, np.ndarray, np.ndarray]:
+    samples_per_point: int = 1):
     """
     Perform grid search over jump time multiplier to maximize Cramer-von Mises p-value.
     

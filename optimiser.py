@@ -4,8 +4,6 @@ from numpy import random
 from tqdm import tqdm
 import scipy.stats as stats
 
-random.seed(10)
-
 def const_neg_potential(x, t, period=100):
         """Defines the potential function."""
         t = 25
