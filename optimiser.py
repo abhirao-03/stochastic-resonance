@@ -18,18 +18,20 @@ def mu(x, t):
 def sigma(x, t, epsilon):
     return (epsilon) ** (1/2)
 
+x_init = -1
+dt = 0.01
+time_horizon = 1000
+num_trajectories = 1000
+epsilon = ((4.29 * 2)/np.log(time_horizon))
+num_steps = int(time_horizon/dt)
+noise = random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
 
-def simulate(x_init, dt, time_horizon, jump_mult, num_trajectories: int, delta=6):
-    num_trajectories = int(num_trajectories)
-    num_steps = int(time_horizon/dt)
+def simulate(jump_mult: int, delta=6):
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
     x[0] = x_init
     time_vec = np.linspace(0, time_horizon, num_steps)
-
-    global epsilon
-    epsilon = ((4.29 * 2)/np.log(time_horizon)) * jump_mult
-
+    
     for j in tqdm(range(num_trajectories)):
         sign_change_detected = False
         steps_since_change = 0
@@ -39,11 +41,11 @@ def simulate(x_init, dt, time_horizon, jump_mult, num_trajectories: int, delta=6
         for i in range(num_steps - 1):
             curr_t = time_vec[i]
             curr_x = x[i]
-            dW = random.normal(loc=0.0, scale=dt**(1/2))
+            dW = noise[j, i]
             
             x[i+1] = (curr_x + 
                     mu(curr_x, curr_t) * dt + 
-                    sigma(curr_x, curr_t, epsilon) * dW)
+                    sigma(curr_x, curr_t, epsilon * jump_mult) * dW)
             
             # If we haven't detected a sign change yet
             if not sign_change_detected:
@@ -72,20 +74,14 @@ def simulate(x_init, dt, time_horizon, jump_mult, num_trajectories: int, delta=6
     
     return x, jump_times
 
-def exp_cdf(x):
-    theoretical_rate = 1/(np.exp(1.17 * 2/epsilon))
+def exp_cdf(x, jump_mult):
+    theoretical_rate = 1/(np.exp(1.17 * 2/(epsilon * jump_mult)))
     return 1 - np.exp(-theoretical_rate * x)
 
-def run(vertex):
-    x_init =  vertex[0]
-    dt = vertex[1]
-    time_horizon = vertex[2]
-    jump_mult = vertex[3]
-    num_trajectories = vertex[4]
-    
-    _, jump_times = simulate(x_init, dt, time_horizon, jump_mult, num_trajectories)
+def run(jump_mult):
+    _, jump_times = simulate(jump_mult)
 
-    x_transformed = exp_cdf(jump_times)
+    x_transformed = exp_cdf(jump_times, jump_mult)
 
     met = stats.cramervonmises(x_transformed, 'uniform').pvalue
 
