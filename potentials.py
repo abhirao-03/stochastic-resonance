@@ -1,7 +1,7 @@
 import numpy as np
 
 def d_poly__d_x(x, t, period=100):
-    t=0
+    t = 0
     a1 = 0
     a2 = -3.2
     sin_scale = 3
