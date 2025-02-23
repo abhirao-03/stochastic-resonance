@@ -11,7 +11,7 @@ def adaptive_grid_search(
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
     show_progress: bool = False,
-    plot: bool = False):
+    plot: bool = True):
     """
     Perform adaptive grid search over jump time multiplier with progressive refinement.
     
@@ -74,18 +74,18 @@ def adaptive_grid_search(
             best_pvalue = mean_pvalues[iter_best_idx]
             best_jump_mult = jump_mults[iter_best_idx]
         
-        if plot:
-            # Plot current iteration
-            plt.figure(figsize=(10, 6))
-            plt.errorbar(jump_mults, mean_pvalues, fmt='o-', capsize=5, 
-                        label=f'Iteration {iteration + 1}')
-            plt.xscale('log')
-            plt.xlabel('Jump Multiplier')
-            plt.ylabel('Mean p-value')
-            plt.title(f'Adaptive Grid Search - Iteration {iteration + 1}')
-            plt.grid(True)
-            plt.legend()
-            plt.show()
+        # if plot:
+        #     # Plot current iteration
+        #     plt.figure(figsize=(10, 6))
+        #     plt.errorbar(jump_mults, mean_pvalues, fmt='o-', capsize=5, 
+        #                 label=f'Iteration {iteration + 1}')
+        #     plt.xscale('log')
+        #     plt.xlabel('Jump Multiplier')
+        #     plt.ylabel('Mean p-value')
+        #     plt.title(f'Adaptive Grid Search - Iteration {iteration + 1}')
+        #     plt.grid(True)
+        #     plt.legend()
+        #     plt.show()
         
         if iteration < n_refinements:
             # Calculate new search range around best point
@@ -109,6 +109,7 @@ def adaptive_grid_search(
         plt.title('Adaptive Grid Search - All Iterations')
         plt.grid(True)
         plt.legend()
+        plt.savefig('ML_VIZ_FIRST_RUN.svg', transparent=True)
         plt.show()
     
     return best_jump_mult, best_pvalue, all_jump_mults, all_mean_pvalues
