@@ -3,7 +3,7 @@ from numpy import random
 from tqdm import tqdm
 import scipy.stats as stats
 
-x_init = -1
+x_init = 1
 dt = 0.01
 time_horizon = 1000
 num_trajectories = 1000
