@@ -3,7 +3,7 @@ from numpy import random
 from tqdm import tqdm
 import scipy.stats as stats
 
-x_init = 1
+x_init = -1
 dt = 0.01
 time_horizon = 1000
 num_trajectories = 1000
@@ -14,7 +14,12 @@ noise = random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_step
 def const_neg_potential(x, t, period=100):
         """Defines the potential function."""
         t = 25
-        a1, a2, a3, a4, a5, a6 = 0, -3.2, 3*np.sin(2*np.pi*t/period), 0.1, -(3/5)*3*np.sin(2*np.pi*t/period), 1
+        a1 = 0
+        a2 = -3.2
+        a3 = 3*np.sin(2*np.pi*t/period)
+        a6 = 1
+        a4 = (-3/2)*a6 + (8/5)
+        a5 = -(3/5)*a3
         all_scale = 1.3
         
         return all_scale * (a6*6*x**5 + a5*5*x**4 + a4*4*x**3 + a3*3*x**2 + a2*2*x + a1)
@@ -24,8 +29,6 @@ def mu(x, t):
 
 def sigma(x, t, epsilon):
     return (epsilon) ** (1/2)
-
-
 
 def simulate(jump_mult: int, delta=6):
     jump_times = np.empty((num_trajectories,))
