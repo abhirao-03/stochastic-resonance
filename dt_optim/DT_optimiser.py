@@ -4,12 +4,16 @@ from tqdm import tqdm
 import scipy.stats as stats
 
 x_init = -1
-dt = 0.01
-time_horizon = 100
+dt_min = 0.001
+time_horizon = 1000
 num_trajectories = 1000
-epsilon = ((4.29 * 2)/np.log(time_horizon))
-num_steps = int(time_horizon/dt)
-noise = random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
+jump_mult = 3
+epsilon = ((4.29 * 2)/np.log(time_horizon)) * jump_mult
+max_num_steps = int(time_horizon/dt_min)
+
+print('generating noise')
+max_noise = random.normal(loc=0.0, scale=dt_min**(1/2), size=(num_trajectories, max_num_steps))
+print('noise generated')
 
 def const_neg_potential(x, t, period=100):
         """Defines the potential function."""
@@ -27,10 +31,15 @@ def const_neg_potential(x, t, period=100):
 def mu(x, t):
     return -const_neg_potential(x, t)
 
-def sigma(x, t, epsilon):
+def sigma(x, t):
     return (epsilon) ** (1/2)
 
-def simulate(jump_mult: int, delta=100):
+
+def simulate(dt: float, delta=6):
+
+    step_mult = int(dt / dt_min)
+
+    num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
     x[0] = x_init
@@ -45,11 +54,13 @@ def simulate(jump_mult: int, delta=100):
         for i in range(num_steps - 1):
             curr_t = time_vec[i]
             curr_x = x[i]
-            dW = noise[j, i]
+            base_idx = i * step_mult
+
+            aggregated_noise = np.sum(max_noise[j, base_idx : base_idx+step_mult]) / np.sqrt(step_mult)
             
             x[i+1] = (curr_x + 
                     mu(curr_x, curr_t) * dt + 
-                    sigma(curr_x, curr_t, epsilon * jump_mult) * dW)
+                    sigma(curr_x, curr_t) * aggregated_noise)
             
             # If we haven't detected a sign change yet
             if not sign_change_detected:
@@ -78,15 +89,21 @@ def simulate(jump_mult: int, delta=100):
     
     return x, jump_times
 
-def exp_cdf(x, jump_mult):
-    theoretical_rate = 1/(np.exp(4.29 * 2/(epsilon * jump_mult)))
+def exp_cdf(x):
+    theoretical_rate = 1/(np.exp(1.17 * 2/(epsilon)))
     return 1 - np.exp(-theoretical_rate * x)
 
-def run(jump_mult):
-    _, jump_times = simulate(jump_mult)
+def run(dt):
+    _, jump_times = simulate(dt)
 
-    x_transformed = exp_cdf(jump_times, jump_mult)
+    x_transformed = exp_cdf(jump_times)
 
     met = stats.cramervonmises(x_transformed, 'uniform').pvalue
 
     return met
+
+
+
+met = run(0.01)
+
+print()
