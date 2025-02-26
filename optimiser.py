@@ -3,13 +3,19 @@ from numpy import random
 from tqdm import tqdm
 import scipy.stats as stats
 
-x_init = 1
+
+shallow = False
+
 dt = 0.01
 time_horizon = 100
 num_trajectories = 1000
-epsilon = ((1.17 * 2)/np.log(time_horizon))
 num_steps = int(time_horizon/dt)
-noise = random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
+
+well_depth = 1.17 if shallow else 4.29
+x_init = 1 if shallow else -1
+delta = 1000 if shallow else 100
+
+epsilon = ((well_depth * 2)/np.log(time_horizon))
 
 def const_neg_potential(x, t, period=100):
         """Defines the potential function."""
@@ -30,7 +36,9 @@ def mu(x, t):
 def sigma(x, t, epsilon):
     return (epsilon) ** (1/2)
 
-def simulate(jump_mult: int, delta=1000):
+
+
+def simulate(jump_mult: int, noise,  delta=delta):
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
     x[0] = x_init
@@ -79,11 +87,13 @@ def simulate(jump_mult: int, delta=1000):
     return x, jump_times
 
 def exp_cdf(x, jump_mult):
-    theoretical_rate = 1/(np.exp(1.17 * 2/(epsilon * jump_mult)))
+    theoretical_rate = 1/(np.exp(well_depth * 2/(epsilon * jump_mult)))
     return 1 - np.exp(-theoretical_rate * x)
 
 def run(jump_mult):
-    _, jump_times = simulate(jump_mult)
+    noise = random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
+
+    _, jump_times = simulate(jump_mult, noise)
 
     x_transformed = exp_cdf(jump_times, jump_mult)
 

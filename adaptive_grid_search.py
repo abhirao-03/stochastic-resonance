@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 def adaptive_grid_search(
-    n_points: int = 10,
+    n_points: int = 4,
     min_jump_mult: float = 1.8,
-    max_jump_mult: float = 3.0,
+    max_jump_mult: float = 2.8,
     samples_per_point: int = 3,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
