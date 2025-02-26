@@ -4,16 +4,10 @@ from tqdm import tqdm
 import scipy.stats as stats
 
 x_init = -1
-dt_min = 0.001
-time_horizon = 1000
+time_horizon = 100
 num_trajectories = 1000
-jump_mult = 3
+jump_mult = 2.1
 epsilon = ((4.29 * 2)/np.log(time_horizon)) * jump_mult
-max_num_steps = int(time_horizon/dt_min)
-
-print('generating noise')
-max_noise = random.normal(loc=0.0, scale=dt_min**(1/2), size=(num_trajectories, max_num_steps))
-print('noise generated')
 
 def const_neg_potential(x, t, period=100):
         """Defines the potential function."""
@@ -34,11 +28,7 @@ def mu(x, t):
 def sigma(x, t):
     return (epsilon) ** (1/2)
 
-
-def simulate(dt: float, delta=6):
-
-    step_mult = int(dt / dt_min)
-
+def simulate(dt: float, noise: np.array, delta=6):
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
@@ -54,13 +44,11 @@ def simulate(dt: float, delta=6):
         for i in range(num_steps - 1):
             curr_t = time_vec[i]
             curr_x = x[i]
-            base_idx = i * step_mult
-
-            aggregated_noise = np.sum(max_noise[j, base_idx : base_idx+step_mult]) / np.sqrt(step_mult)
+            dW = noise[j, i]
             
             x[i+1] = (curr_x + 
                     mu(curr_x, curr_t) * dt + 
-                    sigma(curr_x, curr_t) * aggregated_noise)
+                    sigma(curr_x, curr_t) * dW)
             
             # If we haven't detected a sign change yet
             if not sign_change_detected:
@@ -94,16 +82,13 @@ def exp_cdf(x):
     return 1 - np.exp(-theoretical_rate * x)
 
 def run(dt):
-    _, jump_times = simulate(dt)
+    num_steps = int(time_horizon/dt)
+    noise = np.random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
+
+    _, jump_times = simulate(dt, noise)
 
     x_transformed = exp_cdf(jump_times)
 
     met = stats.cramervonmises(x_transformed, 'uniform').pvalue
 
     return met
-
-
-
-met = run(0.01)
-
-print()
