@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 def adaptive_dt_grid_search(
-    n_points: int = 10,
-    min_dt: float = 0.001,
+    n_points: int = 6,
+    min_dt: float = 0.0001,
     max_dt: float = 0.01,
-    samples_per_point: int = 3,
+    samples_per_point: int = 5,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
     show_progress: bool = True,

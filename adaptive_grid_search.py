@@ -5,8 +5,8 @@ from tqdm import tqdm
 
 def adaptive_grid_search(
     n_points: int = 10,
-    min_jump_mult: float = 2.0,
-    max_jump_mult: float = 4.0,
+    min_jump_mult: float = 1.8,
+    max_jump_mult: float = 3.0,
     samples_per_point: int = 3,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,

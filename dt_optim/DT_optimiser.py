@@ -28,7 +28,7 @@ def mu(x, t):
 def sigma(x, t):
     return (epsilon) ** (1/2)
 
-def simulate(dt: float, noise: np.array, delta=6):
+def simulate(dt: float, noise: np.array, delta=100):
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
@@ -78,7 +78,7 @@ def simulate(dt: float, noise: np.array, delta=6):
     return x, jump_times
 
 def exp_cdf(x):
-    theoretical_rate = 1/(np.exp(1.17 * 2/(epsilon)))
+    theoretical_rate = 1/(np.exp(4.29 * 2/(epsilon)))
     return 1 - np.exp(-theoretical_rate * x)
 
 def run(dt):
