@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 def adaptive_grid_search(
-    n_points: int = 4,
-    min_jump_mult: float = 1.8,
-    max_jump_mult: float = 2.8,
+    n_points: int = 10,
+    min_jump_mult: float = 2.0,
+    max_jump_mult: float = 3.0,
     samples_per_point: int = 3,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
@@ -46,7 +46,7 @@ def adaptive_grid_search(
         print()
         
         # Create grid points with geometric spacing
-        jump_mults = np.geomspace(current_min, current_max, n_points)
+        jump_mults = np.linspace(current_min, current_max, n_points)
         mean_pvalues = np.zeros(n_points)
         
         # Evaluate each grid point
@@ -89,13 +89,24 @@ def adaptive_grid_search(
         
         if iteration < n_refinements:
             # Calculate new search range around best point
+            # Fix: Check if best_jump_mult is None before using it
+            if best_jump_mult is None:
+                # If no valid result found yet, use the midpoint of the current range
+                best_jump_mult = (current_min + current_max) / 2
+                print("Warning: No valid best jump multiplier found. Using midpoint of range.")
+            
             range_width = (current_max - current_min) * refinement_factor
             current_min = max(min_jump_mult, best_jump_mult - range_width/2)
             current_max = min(max_jump_mult, best_jump_mult + range_width/2)
+    
     print()
     print("\nFinal Results:")
-    print(f"Best jump multiplier: {best_jump_mult:.4f}")
-    print(f"Best mean p-value: {best_pvalue:.4f}")
+    if best_jump_mult is None:
+        print("No valid best jump multiplier found.")
+        best_jump_mult = (min_jump_mult + max_jump_mult) / 2  # Provide a default value
+    else:
+        print(f"Best jump multiplier: {best_jump_mult:.4f}")
+        print(f"Best mean p-value: {best_pvalue:.4f}")
     
     if plot:
         # Plot all iterations together
@@ -106,9 +117,9 @@ def adaptive_grid_search(
         plt.xscale('log')
         plt.xlabel('Jump Multiplier')
         plt.ylabel('Mean p-value')
-        plt.title('Adaptive Grid Search - All Iterations')
         plt.grid(True)
         plt.legend()
+        plt.savefig('grid_search_deep_2_shallow.svg', transparent=True)
         plt.show()
     
     return best_jump_mult, best_pvalue, all_jump_mults, all_mean_pvalues

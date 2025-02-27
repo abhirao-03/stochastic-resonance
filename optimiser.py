@@ -36,9 +36,8 @@ def mu(x, t):
 def sigma(x, t, epsilon):
     return (epsilon) ** (1/2)
 
-
-
-def simulate(jump_mult: int, noise,  delta=delta):
+def simulate(jump_mult: int, noise,  delta=100):
+    
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
     x[0] = x_init

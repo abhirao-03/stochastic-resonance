@@ -4,13 +4,13 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 def adaptive_dt_grid_search(
-    n_points: int = 6,
-    min_dt: float = 0.0001,
+    n_points: int = 10,
+    min_dt: float = 0.00026,
     max_dt: float = 0.01,
-    samples_per_point: int = 5,
+    samples_per_point: int = 3,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
-    show_progress: bool = True,
+    show_progress: bool = False,
     plot: bool = True):
     """
     Perform adaptive grid search over dt parameter with progressive refinement.
@@ -60,7 +60,6 @@ def adaptive_dt_grid_search(
         for i, dt in grid_iterator:
             pvalues = np.zeros(samples_per_point)
             sample_iterator = tqdm(range(samples_per_point), leave=False, desc=f"dt {dt:.6f}") if show_progress else range(samples_per_point)
-            
             try:
                 for j in sample_iterator:
                     pvalues[j] = run(dt)  # Using original run function with dt as parameter
@@ -127,9 +126,10 @@ def adaptive_dt_grid_search(
             plt.xscale('log')
             plt.xlabel('dt (Time Step)')
             plt.ylabel('Mean p-value')
-            plt.title('Adaptive Grid Search for dt - All Iterations')
             plt.grid(True)
+            plt.savefig('grid_search_dt_shallow.svg', transparent=True)
             plt.legend()
+
             plt.show()
     else:
         print("No valid dt values were found during the search.")

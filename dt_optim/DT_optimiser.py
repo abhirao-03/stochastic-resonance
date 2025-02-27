@@ -3,11 +3,18 @@ from numpy import random
 from tqdm import tqdm
 import scipy.stats as stats
 
-x_init = -1
+shallow = False
+
+x_init = 1
 time_horizon = 100
 num_trajectories = 1000
-jump_mult = 2.1
-epsilon = ((4.29 * 2)/np.log(time_horizon)) * jump_mult
+jump_mult = 2.096
+
+well_depth = 1.17 if shallow else 4.29
+x_init = 1 if shallow else -1
+delta = 1000 if shallow else 100
+
+epsilon = ((well_depth * 2)/np.log(time_horizon)) * jump_mult
 
 def const_neg_potential(x, t, period=100):
         """Defines the potential function."""
@@ -28,7 +35,9 @@ def mu(x, t):
 def sigma(x, t):
     return (epsilon) ** (1/2)
 
-def simulate(dt: float, noise: np.array, delta=100):
+def simulate(dt: float, noise: np.array):
+    delta = int((0.740413 / (dt - 0.000248603)) + 24.24119)
+
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
     x = np.zeros((num_steps,))
@@ -78,7 +87,7 @@ def simulate(dt: float, noise: np.array, delta=100):
     return x, jump_times
 
 def exp_cdf(x):
-    theoretical_rate = 1/(np.exp(4.29 * 2/(epsilon)))
+    theoretical_rate = 1/(np.exp(well_depth * 2/(epsilon)))
     return 1 - np.exp(-theoretical_rate * x)
 
 def run(dt):
