@@ -6,8 +6,8 @@ from tqdm import tqdm
 def adaptive_grid_search(
     n_points: int = 10,
     min_jump_mult: float = 2.0,
-    max_jump_mult: float = 3.0,
-    samples_per_point: int = 3,
+    max_jump_mult: float = 4.0,
+    samples_per_point: int = 5,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
     show_progress: bool = False,
@@ -53,16 +53,19 @@ def adaptive_grid_search(
         grid_iterator = tqdm(enumerate(jump_mults), total=n_points, desc="Grid Search") if show_progress else enumerate(jump_mults)
         
         for i, jump_mult in grid_iterator:
-            pvalues = np.zeros(samples_per_point)
-            sample_iterator = tqdm(range(samples_per_point), leave=False, desc=f"Jump mult {jump_mult:.3f}") if show_progress else range(samples_per_point)
+            pvalues = []
+            for j in range(samples_per_point):
+                pvalue = run(jump_mult)
+                if not np.isnan(pvalue):  # Skip NaN values
+                    pvalues.append(pvalue)
             
-            for j in sample_iterator:
-                pvalues[j] = run(jump_mult)
+            if len(pvalues) > 0:
+                mean_pvalues[i] = np.mean(pvalues)
+            else:
+                mean_pvalues[i] = np.nan  # Mark as invalid if all samples are NaN
             
-            mean_pvalues[i] = np.mean(pvalues)
             print(f"Jump mult {jump_mult:.3f}: mean p-value = {mean_pvalues[i]:.4f}")
             print()
-            
         
         # Store results for this iteration
         all_jump_mults.append(jump_mults)
@@ -119,7 +122,7 @@ def adaptive_grid_search(
         plt.ylabel('Mean p-value')
         plt.grid(True)
         plt.legend()
-        plt.savefig('grid_search_deep_2_shallow.svg', transparent=True)
+        #plt.savefig('grid_search_deep_2_shallow.svg', transparent=True)
         plt.show()
     
     return best_jump_mult, best_pvalue, all_jump_mults, all_mean_pvalues
