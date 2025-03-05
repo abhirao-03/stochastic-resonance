@@ -77,18 +77,18 @@ def adaptive_grid_search(
             best_pvalue = mean_pvalues[iter_best_idx]
             best_jump_mult = jump_mults[iter_best_idx]
         
-        if plot:
-            # Plot current iteration
-            plt.figure(figsize=(10, 6))
-            plt.errorbar(jump_mults, mean_pvalues, fmt='o-', capsize=5, 
-                        label=f'Iteration {iteration + 1}')
-            plt.xscale('log')
-            plt.xlabel('Jump Multiplier')
-            plt.ylabel('Mean p-value')
-            plt.title(f'Adaptive Grid Search - Iteration {iteration + 1}')
-            plt.grid(True)
-            plt.legend()
-            plt.show()
+        # if plot:
+        #     # Plot current iteration
+        #     plt.figure(figsize=(10, 6))
+        #     plt.errorbar(jump_mults, mean_pvalues, fmt='o-', capsize=5, 
+        #                 label=f'Iteration {iteration + 1}')
+        #     plt.xscale('log')
+        #     plt.xlabel('Jump Multiplier')
+        #     plt.ylabel('Mean p-value')
+        #     plt.title(f'Adaptive Grid Search - Iteration {iteration + 1}')
+        #     plt.grid(True)
+        #     plt.legend()
+        #     plt.show()
         
         if iteration < n_refinements:
             # Calculate new search range around best point

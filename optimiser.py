@@ -41,7 +41,7 @@ def mu(x, t):
 def sigma(x, t, epsilon):
     return (epsilon) ** (1/2)
 
-def simulate(jump_mult, noise, jump_threshold=1, delta=12):
+def simulate(jump_mult, noise, jump_threshold=1, delta=10):
     jump_times = np.empty((num_trajectories,))
     trajectories = np.zeros((num_trajectories, num_steps))
     
