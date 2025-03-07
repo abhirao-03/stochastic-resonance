@@ -90,7 +90,7 @@ def simulate(dt: float, noise: np.array):
     return x, jump_times
 
 def simulate(dt, noise, jump_threshold=1):
-    delta = 10 * (0.01/dt)
+    delta = int((0.0677778 / dt) + 3.22222)
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
     trajectories = np.zeros((num_trajectories, num_steps))

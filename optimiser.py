@@ -94,7 +94,7 @@ def exp_cdf(x, jump_mult):
     return 1 - np.exp(-theoretical_rate * x)
 
 def run(jump_mult):
-    noise = random.normal(loc=0.0, scale=dt**(1 / 2), size=(num_trajectories, num_steps))
+    noise = random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
 
     _, jump_times = simulate(jump_mult, noise)
 

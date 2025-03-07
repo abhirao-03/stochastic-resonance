@@ -5,8 +5,8 @@ from tqdm import tqdm
 
 def adaptive_grid_search(
     n_points: int = 10,
-    min_jump_mult: float = 3.0,
-    max_jump_mult: float = 4.0,
+    min_jump_mult: float = 2.0,
+    max_jump_mult: float = 3.0,
     samples_per_point: int = 3,
     n_refinements: int = 3,
     refinement_factor: float = 0.2,
@@ -113,22 +113,22 @@ def adaptive_grid_search(
     
     if plot:
         # Plot all iterations together
-        plt.figure(figsize=(12, 8))
+        plt.figure(figsize=(16, 10))
         for i in range(len(all_jump_mults)):
             plt.errorbar(all_jump_mults[i], all_mean_pvalues[i], 
                         fmt='o-', capsize=5, label=f'Iteration {i+1}')
         plt.xscale('log')
-        plt.xlabel('Jump Multiplier')
-        plt.ylabel('Mean p-value')
+        plt.xlabel('Jump Multiplier', fontsize=25, labelpad=10)
+        plt.ylabel('Mean $p$-value', fontsize=25, labelpad=10)
+        plt.tick_params(labelsize=25)
         plt.grid(True)
         plt.legend()
-        #plt.savefig('grid_search_deep_2_shallow.svg', transparent=True)
+        plt.savefig('grid_search_shallow_2_deep.svg', transparent=True)
         plt.show()
     
     return best_jump_mult, best_pvalue, all_jump_mults, all_mean_pvalues
 
 best_mult, best_pval, all_mults, all_means = adaptive_grid_search()
-
 
 np.save('best_mult.npy', best_mult)
 np.save('best_pval.npy', best_pval)
