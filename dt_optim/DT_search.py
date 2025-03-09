@@ -4,11 +4,11 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 def adaptive_dt_grid_search(
-    n_points: int = 10,
+    n_points: int = 18,
     min_dt: float = 0.001,
-    max_dt: float = 0.01,
-    samples_per_point: int = 3,
-    n_refinements: int = 3,
+    max_dt: float = 0.009,
+    samples_per_point: int = 8,
+    n_refinements: int = 0,
     refinement_factor: float = 0.2,
     show_progress: bool = False,
     plot: bool = True):
@@ -47,7 +47,7 @@ def adaptive_dt_grid_search(
         print()
         
         # Create grid points with geometric spacing
-        dt_values = np.geomspace(current_min, current_max, n_points)
+        dt_values = np.linspace(current_min, current_max, n_points)
         
         # Sort in descending order to start with larger values first
         dt_values = np.sort(dt_values)[::-1]
@@ -127,7 +127,7 @@ def adaptive_dt_grid_search(
             plt.xlabel('dt (Time Step)')
             plt.ylabel('Mean p-value')
             plt.grid(True)
-            plt.savefig('grid_search_dt_shallow.svg', transparent=True)
+            plt.savefig('grid_search_dt_deep.svg', transparent=True)
             plt.legend()
 
             plt.show()
@@ -139,3 +139,8 @@ def adaptive_dt_grid_search(
 # Run the adaptive grid search
 if __name__ == "__main__":
     best_dt, best_pval, all_dts, all_means = adaptive_dt_grid_search()
+
+    np.save('all_dts.npy', all_dts)
+    np.save('all_means.npy', all_means)
+    np.save('best_dt.npy', best_dt)
+    np.save('best_pval.npy', best_pval)
