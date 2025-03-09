@@ -3,7 +3,7 @@ from numpy import random
 from tqdm import tqdm
 import scipy.stats as stats
 
-shallow = False
+shallow = True
 
 time_horizon = 100
 num_trajectories = 1000
@@ -39,7 +39,7 @@ def sigma(x, t):
     return (epsilon) ** (1/2)
 
 def PJ_alg(dt: float, noise: np.array):
-    delta = int((0.0671918 / (dt)) + 3.22222)
+    delta = int(1000 * (0.01/dt))
 
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
@@ -148,7 +148,7 @@ def run(dt):
     num_steps = int(time_horizon/dt)
     noise = np.random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
 
-    _, jump_times = PJDeepWell_V2(dt, noise)
+    _, jump_times = PJ_alg(dt, noise)
 
     valid_jump_times = jump_times.copy()
     valid_jump_times[np.isnan(valid_jump_times)] = time_horizon
