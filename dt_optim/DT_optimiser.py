@@ -7,7 +7,7 @@ shallow = False
 
 time_horizon = 100
 num_trajectories = 1000
-jump_mult = 4
+jump_mult = 2.568 if shallow else 4
 
 well_depth = 1.17 if shallow else 4.29
 x_init = 1 if shallow else -1
@@ -38,8 +38,8 @@ def mu(x, t):
 def sigma(x, t):
     return (epsilon) ** (1/2)
 
-def simulate(dt: float, noise: np.array):
-    delta = int((0.740413 / (dt - 0.000248603)) + 24.24119)
+def PJ_alg(dt: float, noise: np.array):
+    delta = int((0.0671918 / (dt)) + 3.22222)
 
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
@@ -89,7 +89,7 @@ def simulate(dt: float, noise: np.array):
     
     return x, jump_times
 
-def simulate(dt, noise, jump_threshold=1):
+def PJDeepWell_V2(dt, noise, jump_threshold=1):
     delta = int((0.0677778 / dt) + 3.22222)
     num_steps = int(time_horizon/dt)
     jump_times = np.empty((num_trajectories,))
@@ -148,7 +148,7 @@ def run(dt):
     num_steps = int(time_horizon/dt)
     noise = np.random.normal(loc=0.0, scale=dt**(1/2), size=(num_trajectories, num_steps))
 
-    _, jump_times = simulate(dt, noise)
+    _, jump_times = PJDeepWell_V2(dt, noise)
 
     valid_jump_times = jump_times.copy()
     valid_jump_times[np.isnan(valid_jump_times)] = time_horizon
