@@ -31,3 +31,32 @@ class climate_sde(model_params):
     
     def sigma(self, x=0.0, t=0.0):
         return self.epsilon ** (1/2)
+
+class langevin_SDE(model_params):
+    def __init__(self, mean=0.0, std=0.1, tau=0.05, num_trajectories=1):
+        #distribution parameters
+        super().__init__(num_trajectories=num_trajectories)
+        self.MU = mean
+        self.SIGMA = std
+        self.tau = tau
+        self.theta = 1/self.tau
+
+    def mu(self, x, _t):
+            return self.theta * (self.MU - x)
+
+    def sigma(self, _y, _t):
+            return self.SIGMA * np.sqrt(2/self.tau)
+
+
+class gbm_SDE(model_params):
+    def __init__(self, mu, sigma, theta = 1.0, num_trajectories=1):
+        super().__init__(num_trajectories=num_trajectories)
+        self.MU = mu
+        self.SIGMA = sigma
+        self.theta = theta
+
+    def mu(self, x, _t):
+        return self.MU * x
+    
+    def sigma(self, x, _t):
+        return self.SIGMA * x
