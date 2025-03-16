@@ -1,0 +1,11 @@
+{
+    "debug_mode": true,
+    "quick_debug_scheme": {
+        "num_trajectories": 1000,
+        "time_horizon": 100
+    },
+    "want_jumps": true,
+    "jump_mult" : 3,
+    "save_trajectories": false,
+    "potential": "const_neg_potential"
+}
