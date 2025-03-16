@@ -1,5 +1,5 @@
 import numpy as np
-from optimiser import run
+from jump_mult_optimiser.optimiser import run
 import matplotlib.pyplot as plt
 from tqdm import tqdm
 

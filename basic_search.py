@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from tqdm import tqdm
-from optimiser import run
+from jump_mult_optimiser.optimiser import run
 
 def grid_search_jump_mult(
     n_points: int = 15,
