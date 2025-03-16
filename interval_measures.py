@@ -6,7 +6,7 @@ import json
 
 import sde_models as sde
 from dim_solvers import solver
-from potentials import d_poly__d_x, d_V_pot, const_neg_potential, const_pos_potential
+from potentials import equal_wells_potential, d_V_pot, const_neg_potential, const_pos_potential
 
 # import json
 with open('sim_settings.json') as f:
@@ -27,7 +27,7 @@ climate_sde = sde.climate_sde(x_init = -1,
                               dt = 0.01,
                               time_horizon = time_horizon,
                               num_trajectories = num_trajectories,
-                              potential = d_poly__d_x)
+                              potential = equal_wells_potential)
 
 if settings['potential'] == 'const_neg_potential':
     climate_sde.potential = const_neg_potential
