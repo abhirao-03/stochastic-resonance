@@ -1,7 +1,7 @@
-# UNDER CONSTRUCTION 🏗️
-# Stochastic Differential Equation (SDE) Solver for Final Year Dissertation
+# Stochastic Resonance in Climate Models.
 
-A JAX-based implementation of numerical methods for solving various types of Stochastic Differential Equations (SDEs), with a focus on climate modeling applications.
+
+Implementation of numerical methods for solving various types of Stochastic Differential Equations (SDEs), with a focus on climate modeling applications.
 
 ## Overview
 
@@ -16,10 +16,7 @@ This project provides a framework for solving different types of SDEs using vari
 ### Supported SDE Models
 - Langevin SDE
 - Geometric Brownian Motion (GBM)
-- Climate SDEs with different potential functions:
-  - Sinusoidal potential
-  - Polynomial potential
-  - Instantaneous switching potential
+- Climate SDEs with varying potential functions.
 
 ### Numerical Methods
 - **Euler-Maruyama**: First-order numerical scheme
@@ -30,33 +27,6 @@ This project provides a framework for solving different types of SDEs using vari
 - **Exact Solutions**: Available for Langevin and GBM models
 
 ### Key Components
-
-1. `sde_models.py`: Contains the core SDE model definitions
-   - Base parameter class
-   - Implementation of different SDE types
-   - Drift and diffusion coefficient definitions
-
-2. `dim_solvers.py`: Implements various numerical solving methods
-   - Multiple solver schemes
-   - Vectorized implementation using JAX
-   - Progress tracking during solving
-
-3. `potentials.py`: Defines different potential functions
-   - Various polynomial potentials
-   - Sinusoidal potentials
-   - Time-dependent switching potentials
-
-4. `workbench.py`: Example usage and visualization
-   - Sample implementations
-   - Plotting utilities
-   - Comparison of different methods
-
-## Dependencies
-
-- JAX
-- JAX.numpy
-- Matplotlib
-- NumPy
 
 ## Usage
 
@@ -114,18 +84,3 @@ where:
 - $\mu(X(t), t)$ is the drift coefficient
 - $\sigma(X(t), t)$ is the diffusion coefficient
 - $W(t)$ is a Wiener process
-
-## Future Improvements
-
-1. Additional numerical schemes:
-   - Strong and weak higher-order methods
-   - Adaptive step size methods
-
-2. Enhanced features:
-   - Multi-dimensional SDEs
-   - More potential functions
-   - Statistical analysis tools
-
-3. Performance optimizations:
-   - GPU acceleration
-   - Parallel trajectory computation
